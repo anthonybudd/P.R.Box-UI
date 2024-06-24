@@ -48,13 +48,18 @@
                             :loading="isLoading"
                         >
                             <template v-slot:item.image="{ item }">
-
-                                {{ item.image }}
-
+                                <div class="px-4 py-4">
+                                    <v-img
+                                        :width="200"
+                                        aspect-ratio="1/1"
+                                        cover
+                                        :src="item.image"
+                                    ></v-img>
+                                </div>
                             </template>
                             <template v-slot:item.tracking="{ item }">
-                                <span v-if="item.status == 'Shipped'">
-                                    {{ item.id }}
+                                <span v-if="item.tracking">
+                                    {{ item.tracking }}
                                 </span>
                             </template>
                             <template v-slot:item.status="{ item }">
@@ -73,7 +78,7 @@
                                 <v-btn
                                     variant="tonal"
                                     size="small"
-                                    :to="`/pr-boxes/${item.id}`"
+                                    :to="`/packages/${item.id}`"
                                 >
                                     Open
                                 </v-btn>
@@ -112,7 +117,7 @@ const search = ref('');
 const headers = [
     { title: 'Image', key: 'image' },
     { title: 'Status', key: 'status' },
-    { title: 'Tracking', key: 'tracking' },
+    { title: 'Tracking No.', key: 'tracking' },
     { title: 'Price', key: 'price' },
     { title: 'Actions', key: 'actions' }
 ];

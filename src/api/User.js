@@ -20,6 +20,10 @@ class User extends Service {
     updateAddress(address) {
         return this.axios.post(`/user/update-address`, address);
     }
+
+    getCharges() {
+        return this.axios.get('/user/charges');
+    }
 }
 
 export default User;

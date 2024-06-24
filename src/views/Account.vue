@@ -24,6 +24,10 @@
                                 {{ user.firstName.charAt(0).toUpperCase() }}.{{
                                     user.lastName.charAt(0).toUpperCase() }}
                             </v-btn>
+                            <v-chip
+                                label
+                                size="small"
+                            >{{ user.type }}</v-chip>
                             <p class="text-medium-emphasis">{{ user.id }}</p>
                             <h2 class="ml-4">
                                 <span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span>
@@ -38,6 +42,8 @@
                             cols="12"
                         >
                             <AccountAddress />
+                            <v-divider></v-divider>
+                            <Charges />
                             <v-divider></v-divider>
                             <AccountUser />
                             <v-divider></v-divider>
@@ -55,6 +61,7 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useDisplay } from 'vuetify';
 import AccountUser from './../components/AccountUser';
+import Charges from './../components/Charges';
 import AccountPassword from './../components/AccountPassword';
 import AccountAddress from './../components/AccountAddress';
 // import Groups from './../components/Groups';

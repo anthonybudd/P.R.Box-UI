@@ -13,14 +13,9 @@ export default createRouter({
                     component: () => import('@/views/Dashboard.vue'),
                 },
                 {
-                    path: '/pr-boxes',
-                    name: 'PR Boxes',
-                    component: () => import('@/views/PRBoxesIndex.vue'),
-                },
-                {
-                    path: '/pr-boxes/:PRBoxID',
+                    path: '/packages/:packageID',
                     name: 'PRBoxSingle',
-                    component: () => import('@/views/PRBoxSingle.vue'),
+                    component: () => import('@/views/PackageSingle.vue'),
                 },
                 {
                     path: '/account',
@@ -42,7 +37,7 @@ export default createRouter({
                 {
                     path: '/sign-up',
                     name: 'SignUp',
-                    component: () => import('@/views/Auth/Login.vue'),
+                    component: () => import('@/views/Auth/SignUp.vue'),
                 },
                 {
                     path: '/forgot-password',
