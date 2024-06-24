@@ -1,7 +1,7 @@
 <template>
     <v-app class="bg-grey-lighten-4">
         <notifications />
-        <AppBar :disabled="isChangingGroup" />
+        <AdminBar :disabled="isChangingGroup" />
         <DefaultView v-if="!isChangingGroup" />
 
         <v-container
@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import AppBar from './AppBar.vue';
+import AdminBar from './AdminBar.vue';
 import DefaultView from './View.vue';
 import emitter from 'tiny-emitter/instance';
 

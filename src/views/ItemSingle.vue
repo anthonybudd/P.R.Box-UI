@@ -3,7 +3,7 @@
     <v-container>
         <v-row>
             <v-col>
-                <span class="text-h5 font-weight-bold">Package: <small v-if="pkg.id">{{ pkg.id }}</small></span>
+                <span class="text-h5 font-weight-bold">Package: <small v-if="item.id">{{ item.id }}</small></span>
             </v-col>
         </v-row>
 
@@ -22,43 +22,43 @@
                             </v-card-title>
                             <v-card-text>
                                 <v-chip
-                                    :color="({ Received: 'blue', Shipped: 'light-blue', Delivered: 'green' })[pkg.status]"
+                                    :color="({ Received: 'blue', Shipped: 'light-blue', Delivered: 'green' })[item.status]"
                                     label
                                     size="x-large"
                                 >
-                                    {{ pkg.status }}
+                                    {{ item.status }}
                                 </v-chip>
                             </v-card-text>
 
                             <v-card-title
-                                v-if="pkg.tracking"
+                                v-if="item.tracking"
                                 class="text-overline"
                             >
                                 Tracking:
                                 <div class="text-h5">
-                                    {{ pkg.tracking }}
+                                    {{ item.tracking }}
                                 </div>
                             </v-card-title>
 
                             <v-card-title
-                                v-if="pkg.weight"
+                                v-if="item.weight"
                                 class="text-overline"
                             >
                                 Weight:
                                 <div class="text-h5">
-                                    {{ pkg.weight }}g
+                                    {{ item.weight }}g
                                 </div>
                             </v-card-title>
 
                             <v-card-title
-                                v-if="pkg.image"
+                                v-if="item.image"
                                 class="text-overline"
                             >
                                 Image:
                             </v-card-title>
                             <v-img
-                                v-if="pkg.image"
-                                :src="pkg.image"
+                                v-if="item.image"
+                                :src="item.image"
                             ></v-img>
                         </v-col>
                     </v-row>
@@ -147,9 +147,9 @@ import BookDeleteConfirmation from './../components/BookDeleteConfirmation.vue';
 
 const api = inject('api');
 const route = useRoute();
-const packageID = route.params.packageID;
+const itemID = route.params.itemID;
 
-const pkg = ref({});
+const item = ref({});
 const isLoading = ref(true);
 const editDialoge = ref(false);
 
@@ -159,8 +159,8 @@ onMounted(async () => {
 });
 
 const getData = async () => {
-    const { data } = await api.pkg.get(packageID);
-    pkg.value = data;
+    const { data } = await api.items.get(itemID);
+    item.value = data;
 };
 
 const onClose = () => {

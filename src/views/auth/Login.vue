@@ -67,12 +67,13 @@
 <script setup>
 import { ref } from "vue";
 import api from "./../../api";
-import router from "@/plugins/router";
-import { useRoute } from "vue-router";
+import { onLogin } from './../../plugins';
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const isLoading = ref(false);
 const isError = ref(false);
@@ -89,9 +90,7 @@ const onClickLogin = async () => {
 
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
-
-        const { data: user } = await api.user.get();
-        store.commit("setUser", user);
+        await onLogin(api, store, router);
 
         if (route.query.redirect) {
             router.push(atob(route.query.redirect));

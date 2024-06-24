@@ -30,3 +30,35 @@ export function registerPlugins(app) {
             },
         });
 }
+
+
+export async function onLogin(api, store, router) {
+    const { data: user } = await api.user.get();
+    store.commit('setUser', user);
+
+    let lastGroupID = localStorage.getItem('lastGroupID');
+    let lastGroup;
+    for (const g of user.Groups) {
+        if (g.id === lastGroupID) lastGroup = g;
+    }
+
+    const useZerothGroup = async () => {
+        const { data: group } = await api.group.get(user.Groups[0].id);
+        store.commit('setGroup', group);
+    };
+
+    if (lastGroup) {
+        try {
+            const { data: group } = await api.group.get(lastGroup.id);
+            store.commit('setGroup', group);
+        } catch (e) {
+            useZerothGroup(); // May have been removed from group
+        }
+    } else if (user.Groups[0]) {
+        useZerothGroup();
+    }
+
+    if (user.type === 'Admin') router.push('/admin');
+    if (user.status === 'Blocked') return router.push('/blocked');
+    if (user.status === 'Pending') return router.push('/on-boarding');
+}

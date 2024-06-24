@@ -1,5 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { jwtDecode } from 'jwt-decode';
+import api from './../api';
+
+const isAdmin = function (to, from, next) {
+    const jwt = jwtDecode(api.getJWT());
+    if (jwt.type === 'Admin') return next();
+    console.error('You do not have access to this page');
+    return next('/');
+};
+
+
 export default createRouter({
     history: createWebHistory(),
     routes: [
@@ -13,14 +24,67 @@ export default createRouter({
                     component: () => import('@/views/Dashboard.vue'),
                 },
                 {
-                    path: '/packages/:packageID',
+                    path: '/items/:itemID',
                     name: 'PRBoxSingle',
-                    component: () => import('@/views/PackageSingle.vue'),
+                    component: () => import('@/views/ItemSingle.vue'),
                 },
                 {
                     path: '/account',
                     name: 'Account',
                     component: () => import('@/views/Account.vue'),
+                },
+
+            ],
+        },
+
+        {
+            path: '/',
+            component: () => import('@/layouts/default/OnBoarding.vue'),
+            children: [
+                {
+                    path: '/on-boarding',
+                    name: 'OnBoarding',
+                    component: () => import('@/views/OnBoarding.vue'),
+                },
+            ],
+        },
+
+
+        {
+            path: '/admin',
+            component: () => import('@/layouts/default/Admin.vue'),
+            children: [
+                {
+                    path: '/',
+                    name: 'AdminDashboard',
+                    beforeEnter: [
+                        isAdmin,
+                        async (to, from, next) => next('/admin/items'),
+                    ],
+                },
+                {
+                    path: 'items',
+                    name: 'AdminItems',
+                    beforeEnter: isAdmin,
+                    component: () => import('@/views/admin/Items.vue'),
+                },
+                {
+                    path: 'items/:itemID',
+                    name: 'AdminItemsSingle',
+                    beforeEnter: isAdmin,
+                    component: () => import('@/views/admin/ItemSingle.vue'),
+                },
+                {
+                    path: 'users',
+                    name: 'AdminUsers',
+                    beforeEnter: isAdmin,
+                    component: () => import('@/views/admin/Users.vue'),
+                },
+                {
+                    path: 'pr-boxes',
+                    name: 'AdminPRBoxes',
+                    beforeEnter: isAdmin,
+                    component: () => import('@/views/admin/PRBoxes.vue'),
                 },
             ],
         },

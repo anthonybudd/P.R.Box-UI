@@ -1,37 +1,6 @@
 <template>
     <v-container>
-        <h1 class="text-h5 font-weight-bold mb-2">Dashboard</h1>
-
-        <v-row v-if="false">
-            <v-col>
-                <v-alert
-                    v-if="!user.emailVerified && !verifyEmailSent"
-                    density="compact"
-                    title="Verify your email"
-                    close-label="Close Alert"
-                    type="warning"
-                    border="start"
-                    variant="tonal"
-                    closable
-                    prominent
-                >
-                    You must verify your email address. Click the button below to resend the verification email.
-                    <br>
-
-                    <v-btn
-                        @click="resendVerificationEmail"
-                        :disabled="isLoading"
-                        :loading="isLoading"
-                        size="small"
-                        variant="flat"
-                    >
-                        Resend Verification Email
-                    </v-btn>
-                </v-alert>
-            </v-col>
-        </v-row>
-
-        <!-- <DashboardStats></DashboardStats> -->
+        <h1 class="text-h5 font-weight-bold mb-2">Users</h1>
 
         <v-row>
             <v-col
@@ -39,7 +8,6 @@
                 xs="12"
             >
                 <v-card class="fill-height">
-                    <v-card-item title="Items"></v-card-item>
                     <v-card-text>
                         <v-data-table
                             :search="search"
@@ -61,24 +29,59 @@
                                 <span v-if="item.tracking">
                                     {{ item.tracking }}
                                 </span>
+                                <div
+                                    v-else
+                                    class="d-flex"
+                                >
+                                    <v-text-field
+                                        v-model="item.tracking"
+                                        label="Tracking"
+                                        variant="outlined"
+                                        density="dense"
+                                    ></v-text-field>
+                                    <v-btn
+                                        size="small"
+                                        color="primary"
+                                        class="ml-2"
+                                    >Set</v-btn>
+                                </div>
                             </template>
                             <template v-slot:item.status="{ item }">
-                                <v-chip
-                                    :color="({ Received: 'blue', Shipped: 'light-blue', Delivered: 'green' })[item.status]"
-                                    label
-                                >
-                                    {{ item.status }}
-                                </v-chip>
+                                <v-select
+                                    v-model="item.status"
+                                    :disabled="item.status === 'Delivered'"
+                                    density="dense"
+                                    :items="['Received', 'Shipped', 'Delivered']"
+                                    variant="outlined"
+                                    @update:modelValue="onChangeStatus(item)"
+                                ></v-select>
                             </template>
                             <template v-slot:item.price="{ item }">
-                                {{ item.price }}
+                                <span v-if="item.price">
+                                    {{ item.price }}
+                                </span>
+                                <div
+                                    v-else
+                                    class="d-flex"
+                                >
+                                    <v-text-field
+                                        v-model="item.price"
+                                        label="Price"
+                                        variant="outlined"
+                                        density="dense"
+                                    ></v-text-field>
+                                    <v-btn
+                                        size="small"
+                                        color="primary"
+                                        class="ml-2"
+                                    >Set</v-btn>
+                                </div>
                             </template>
-
                             <template v-slot:item.actions="{ item }">
                                 <v-btn
                                     variant="tonal"
                                     size="small"
-                                    :to="`/items/${item.id}`"
+                                    :to="`/admin/items/${item.id}`"
                                 >
                                     Open
                                 </v-btn>
@@ -93,14 +96,12 @@
 
 
 <script setup>
-import DashboardStats from '@/components/DashboardStats.vue';
 import { ref, computed, inject, onMounted } from 'vue';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useStore } from 'vuex';
 import moment from 'moment';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend } from 'chart.js';
 import { Line, Pie } from 'vue-chartjs';
-import { useRouter } from 'vue-router';
 
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend);
@@ -111,7 +112,6 @@ const verifyEmailSent = ref(false);
 const isLoading = ref(false);
 const api = inject('api');
 const store = useStore();
-const router = useRouter();
 
 
 const items = ref([]);
@@ -126,8 +126,7 @@ const headers = [
 
 onMounted(async () => {
     try {
-        // if (user.type === 'Admin') router.push('/admin');
-        const { data } = await api.items.index();
+        const { data } = await api.admin.items.index();
         items.value = data;
     } catch (error) {
         requestFailed.value = true;
@@ -136,16 +135,8 @@ onMounted(async () => {
     }
 });
 
-const resendVerificationEmail = async () => {
-    try {
-        isLoading.value = true;
-        await api.user.resendVerificationEmail();
-        notify('Verification email sent. Check your inbox.');
-        verifyEmailSent.value = true;
-    } catch (error) {
-        console.error(error);
-    } finally {
-        isLoading.value = false;
-    }
-};  
+const onChangeStatus = async (item) => {
+    const { data } = await api.admin.items.setStatus(item.id, item.status);
+    items.value = data;
+};
 </script>

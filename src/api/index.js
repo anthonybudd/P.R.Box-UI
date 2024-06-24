@@ -2,7 +2,9 @@ import Group from './Group';
 import Auth from './Auth';
 import User from './User';
 import PRBoxes from './PRBoxes';
-import PKG from './PKG';
+import Items from './Items';
+
+import AdminItems from './admin/Items';
 
 
 class API {
@@ -16,7 +18,10 @@ class API {
         this.user = new User(JWT);
         this.group = new Group(JWT);
         this.books = new PRBoxes(JWT);
-        this.pkg = new PKG(JWT);
+        this.items = new Items(JWT);
+
+        this.admin = {};
+        this.admin.items = new AdminItems(JWT);
     }
 
     getJWT() {
