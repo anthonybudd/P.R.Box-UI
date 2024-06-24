@@ -9,9 +9,13 @@ class Auth extends Service {
         return this.axios.post(`/auth/sign-up`, signUp);
     }
 
+    verifyEmail(emailVerificationKey) {
+        return this.axios.get(`/auth/verify-email/${emailVerificationKey}`);
+    }
+
     authcheck() {
         return this.axios.get('/_authcheck');
     }
 }
 
-export default Auth;
+export default Auth;;
