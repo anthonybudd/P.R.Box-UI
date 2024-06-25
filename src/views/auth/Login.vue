@@ -8,7 +8,8 @@
             justify="center"
         >
             <v-col
-                cols="3"
+                md="3"
+                xs="12"
                 class="text-center"
             >
                 <v-sheet
@@ -48,13 +49,22 @@
                                         : []
                                         "
                                 ></v-text-field>
-                                <v-btn
-                                    block
-                                    :disabled="isLoading"
-                                    :loading="isLoading"
-                                    color="primary"
-                                    @click="onClickLogin"
-                                >Login</v-btn>
+                                <div class="d-flex">
+                                    <v-btn
+                                        block
+                                        :disabled="isLoading"
+                                        color="primary"
+                                        variant="text"
+                                        @click="onClickSignUp"
+                                    >Sign-up</v-btn>
+                                    <v-btn
+                                        block
+                                        :disabled="isLoading"
+                                        :loading="isLoading"
+                                        color="primary"
+                                        @click="onClickLogin"
+                                    >Login</v-btn>
+                                </div>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -68,17 +78,18 @@
 import { ref } from "vue";
 import api from "./../../api";
 import { onLogin } from './../../plugins';
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
-const route = useRoute();
 const router = useRouter();
 
 const isLoading = ref(false);
 const isError = ref(false);
 const email = ref("");
 const password = ref("");
+
+const onClickSignUp = () => router.push("/sign-up");
 
 const onClickLogin = async () => {
     try {

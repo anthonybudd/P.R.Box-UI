@@ -31,6 +31,16 @@
                             </v-card-text>
 
                             <v-card-title
+                                v-if="item.price"
+                                class="text-overline"
+                            >
+                                Price:
+                                <div class="text-h5">
+                                    {{ $currency(item.price) }}
+                                </div>
+                            </v-card-title>
+
+                            <v-card-title
                                 v-if="item.tracking"
                                 class="text-overline"
                             >
@@ -90,6 +100,7 @@
                                 <div>
                                     <h2>Item Shipped</h2>
                                     <p>Tracking: {{ item.tracking }}</p>
+                                    <p>Price: {{ $currency(item.price) }}</p>
                                 </div>
                             </div>
                         </v-timeline-item>

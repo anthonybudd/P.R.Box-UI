@@ -55,7 +55,7 @@ export default createRouter({
             component: () => import('@/layouts/default/Admin.vue'),
             children: [
                 {
-                    path: '/',
+                    path: '',
                     name: 'AdminDashboard',
                     beforeEnter: [
                         isAdmin,

@@ -27,27 +27,128 @@
                             class="w-100"
                             elevation="0"
                         >
-                            <h2>Verify Email Address</h2>
-                            <p class="text-subtitle-1">Check your email</p>
-                            <v-otp-input
-                                v-model="verificationCode"
-                                @update:modelValue="maybeSubmitVerificationForm"
-                            ></v-otp-input>
-                            <p
-                                v-if="!isLoadingVerificationCode"
-                                class="text-medium-emphasis c-pointer"
-                                @click="resendVerificationCode"
-                            ><small>Resend verification code</small></p>
-                            <v-progress-circular
-                                v-else
-                                indeterminate
-                                color="blue"
-                                size="20"
-                            ></v-progress-circular>
+                            <v-card-text>
+                                <h2>Verify Email Address</h2>
+                                <p class="text-subtitle-1">Check your email</p>
+                                <v-otp-input
+                                    v-model="verificationCode"
+                                    @update:modelValue="maybeSubmitVerificationForm"
+                                ></v-otp-input>
+                                <p
+                                    v-if="!isLoadingVerificationCode"
+                                    class="text-medium-emphasis c-pointer"
+                                    @click="resendVerificationCode"
+                                ><small>Resend verification code</small></p>
+                                <v-progress-circular
+                                    v-else
+                                    indeterminate
+                                    color="blue"
+                                    size="20"
+                                ></v-progress-circular>
+                            </v-card-text>
                         </v-card>
                     </v-col>
                 </v-row>
             </v-window-item>
+            <v-window-item
+                class="fill-height"
+                align-self="center"
+            >
+                <v-row
+                    class="fill-height"
+                    align="center"
+                    justify="center"
+                >
+                    <v-col
+                        md="3"
+                        xs="11"
+                        class="text-center"
+                    >
+                        <v-card
+                            class="w-100"
+                            elevation="0"
+                        >
+                            <v-card-text>
+                                <v-form v-model="isValidAddress">
+                                    <h1>🇵🇷</h1>
+                                    <h2>Puerto Rico Address</h2>
+                                    <p class="text-subtitle-1 mb-2">Enter the address you would like us to ship your
+                                        packages to
+                                    </p>
+                                    <v-text-field
+                                        v-model="user.addressLine1"
+                                        :error-messages="(addressErrors.addressLine1) ? addressErrors.addressLine1.msg : []"
+                                        hide-details="auto"
+                                        label="Address Line 1"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                        :rules="[rules.required]"
+                                        required
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="user.addressLine2"
+                                        :error-messages="(addressErrors.addressLine2) ? addressErrors.addressLine2.msg : []"
+                                        hide-details="auto"
+                                        label="Address Line 2"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="user.addressLine3"
+                                        :error-messages="(addressErrors.addressLine3) ? addressErrors.addressLine3.msg : []"
+                                        hide-details="auto"
+                                        label="Address Line 3"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="user.city"
+                                        :error-messages="(addressErrors.city) ? addressErrors.city.msg : []"
+                                        hide-details="auto"
+                                        label="City"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                        :rules="[rules.required]"
+                                        required
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="user.zipcode"
+                                        :error-messages="(addressErrors.zipcode) ? 'Must be a valid Puerto Rico zipcode' : []"
+                                        hide-details="auto"
+                                        label="Zipcode"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                        :rules="[rules.required, rules.isZipcode]"
+                                        required
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="user.state"
+                                        :error-messages="(addressErrors.state) ? addressErrors.state.msg : []"
+                                        hide-details="auto"
+                                        label="Territory"
+                                        variant="outlined"
+                                        density="compact"
+                                        type="text"
+                                        class="mb-4"
+                                        disabled=""
+                                    ></v-text-field>
+                                </v-form>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-window-item>
+
             <v-window-item
                 class="fill-height"
                 align-self="center"
@@ -66,99 +167,27 @@
                             class="w-100"
                             elevation="0"
                         >
-                            <v-form v-model="isValidAddress">
-                                <h1>🇵🇷</h1>
-                                <h2>Puerto Rico Address</h2>
-                                <p class="text-subtitle-1 mb-2">Enter the address you would like us to ship your
-                                    packages to
-                                </p>
-                                <v-text-field
-                                    v-model="user.addressLine1"
-                                    :error-messages="(addressErrors.addressLine1) ? addressErrors.addressLine1.msg : []"
-                                    hide-details="auto"
-                                    label="Address Line 1"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                    :rules="[rules.required]"
-                                    required
-                                ></v-text-field>
-                                <v-text-field
-                                    v-model="user.addressLine2"
-                                    :error-messages="(addressErrors.addressLine2) ? addressErrors.addressLine2.msg : []"
-                                    hide-details="auto"
-                                    label="Address Line 2"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                ></v-text-field>
-                                <v-text-field
-                                    v-model="user.addressLine3"
-                                    :error-messages="(addressErrors.addressLine3) ? addressErrors.addressLine3.msg : []"
-                                    hide-details="auto"
-                                    label="Address Line 3"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                ></v-text-field>
-                                <v-text-field
-                                    v-model="user.city"
-                                    :error-messages="(addressErrors.city) ? addressErrors.city.msg : []"
-                                    hide-details="auto"
-                                    label="City"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                    :rules="[rules.required]"
-                                    required
-                                ></v-text-field>
-                                <v-text-field
-                                    v-model="user.zipcode"
-                                    :error-messages="(addressErrors.zipcode) ? addressErrors.zipcode.msg : []"
-                                    hide-details="auto"
-                                    label="Zipcode"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                    :rules="[rules.required]"
-                                    required
-                                ></v-text-field>
-                                <v-text-field
-                                    v-model="user.state"
-                                    :error-messages="(addressErrors.state) ? addressErrors.state.msg : []"
-                                    hide-details="auto"
-                                    label="Territory"
-                                    variant="outlined"
-                                    density="compact"
-                                    type="text"
-                                    class="mb-4"
-                                    disabled=""
-                                ></v-text-field>
-                            </v-form>
+                            <v-card-text>
+                                <h2>Account In Review</h2>
+                                <p class="text-subtitle-1 mb-2">A team member is reviewing your details, we will reach
+                                    out
+                                    when your P.R Box is ready to go!</p>
+
+                                <p
+                                    v-if="!isLoadingCheckAccountStatus"
+                                    class="text-medium-emphasis c-pointer"
+                                    @click="checkAccountStatus"
+                                ><small>Check Account Status</small></p>
+                                <v-progress-circular
+                                    v-else
+                                    indeterminate
+                                    color="blue"
+                                    size="20"
+                                ></v-progress-circular>
+                            </v-card-text>
                         </v-card>
                     </v-col>
                 </v-row>
-            </v-window-item>
-            <v-window-item class="fill-height">
-                <v-card
-                    class="d-flex justify-center align-center text-center w-100"
-                    elevation="0"
-                >
-                    <h2>3</h2>
-                </v-card>
-            </v-window-item>
-            <v-window-item class="fill-height">
-                <v-card
-                    class="d-flex justify-center align-center text-center w-100"
-                    elevation="0"
-                >
-                    <h2>4</h2>
-                </v-card>
             </v-window-item>
         </v-window>
 
@@ -190,7 +219,8 @@
                 variant="flat"
                 color="primary"
                 @click="next"
-                :disabled="!isValid"
+                :disabled="!isValid || isLoading"
+                :loading="isLoading"
                 size="large"
             >
                 Next
@@ -228,7 +258,6 @@ let onboarding = ref(0);
 const stages = ref([
     'Email',
     'ID',
-    'Billing',
     'Review',
 ]);
 
@@ -248,13 +277,25 @@ const isValid = computed(() => {
 onMounted(async () => {
     const { data: user } = await api.user.get();
     if (user.status === 'Approved') return router.push('/');
-    if (!user.emailVerified) onboarding.value = 0;
-    onboarding.value = 1;
+    if (!user.emailVerified) {
+        onboarding.value = 0;
+    } else if (!user.addressLine1) {
+        onboarding.value = 1;
+    } else {
+        onboarding.value = 2;
+    }
     isLoading.value = false;
 });
 
 const next = () => {
-    onboarding.value = onboarding.value + 1;
+    switch (onboarding.value) {
+        case 0:
+            onboarding.value = onboarding.value + 1;
+        case 1:
+            submitAddressForm();
+        default:
+            return false;
+    }
 };
 
 const onClickLogout = () => router.push('/logout');
@@ -305,7 +346,7 @@ const submitAddressForm = async () => {
             zipcode: user.value.zipcode,
             state: user.value.state,
         });
-        if (data.verified) onboarding.value = 2;
+        onboarding.value = 2;
     } catch (error) {
         errorHandler(error, (data, code) => {
             if (code === 422) addressErrors.value = data;
@@ -314,6 +355,22 @@ const submitAddressForm = async () => {
         isLoading.value = false;
     }
 };
+
+////////////////////////////////////////////
+// 3 - Review
+const isLoadingCheckAccountStatus = ref(false);
+
+const checkAccountStatus = async () => {
+    isLoadingVerificationCode.value = true;
+    const { data: user } = await api.user.get();
+    if (user.status === 'Approved') {
+        notify('Account Approved');
+        router.push('/');
+    } else {
+        notify('Account Pending');
+    }
+};
+
 
 </script>
 

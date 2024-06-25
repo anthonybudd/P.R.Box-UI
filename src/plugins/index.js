@@ -21,7 +21,8 @@ export function registerPlugins(app) {
                 app.provide('api', api);
                 app.provide('rules', {
                     required: (value) => !!value || 'This field is required.',
-                    isEmail: (value) => !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Must be valid email'
+                    isEmail: (value) => !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Must be valid email',
+                    isZipcode: (value) => !value || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value) || 'Must be a valid zipcode',
                 });
 
                 app.config.globalProperties.$formatDate = (timestamp, format = 'lll') => {
@@ -71,4 +72,5 @@ export async function onLogin(api, store, router) {
     if (user.type === 'Admin') router.push('/admin');
     if (user.status === 'Blocked') return router.push('/blocked');
     if (user.status === 'Pending') return router.push('/on-boarding');
+    return router.push("/");
 }

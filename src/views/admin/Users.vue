@@ -15,73 +15,34 @@
                             :items="items"
                             :loading="isLoading"
                         >
-                            <template v-slot:item.image="{ item }">
-                                <div class="px-4 py-4">
-                                    <v-img
-                                        :width="200"
-                                        aspect-ratio="1/1"
-                                        cover
-                                        :src="item.image"
-                                    ></v-img>
-                                </div>
+                            <template v-slot:item.email="{ item }">
+                                <p><b>{{ item.firstName }} {{ item.lastName }}</b></p>
+                                <p>{{ item.email }}</p>
                             </template>
-                            <template v-slot:item.tracking="{ item }">
-                                <span v-if="item.tracking">
-                                    {{ item.tracking }}
-                                </span>
-                                <div
-                                    v-else
-                                    class="d-flex"
-                                >
-                                    <v-text-field
-                                        v-model="item.tracking"
-                                        label="Tracking"
-                                        variant="outlined"
-                                        density="dense"
-                                    ></v-text-field>
-                                    <v-btn
-                                        size="small"
-                                        color="primary"
-                                        class="ml-2"
-                                    >Set</v-btn>
-                                </div>
+                            <template v-slot:item.address="{ item }">
+                                <p>
+                                    <small>
+                                        {{ item.addressLine1 }} <br />
+                                        {{ item.addressLine2 }} <br />
+                                        <span v-if="item.addressLine3">{{ item.addressLine3 }} <br /></span>
+                                        {{ item.zipcode }} <br />
+                                        {{ item.city }} , {{ item.state }} <br />
+                                    </small>
+                                </p>
                             </template>
                             <template v-slot:item.status="{ item }">
                                 <v-select
                                     v-model="item.status"
-                                    :disabled="item.status === 'Delivered'"
-                                    density="dense"
-                                    :items="['Received', 'Shipped', 'Delivered']"
+                                    density="compact"
+                                    :items="['Pending', 'Approved']"
                                     variant="outlined"
                                     @update:modelValue="onChangeStatus(item)"
                                 ></v-select>
-                            </template>
-                            <template v-slot:item.price="{ item }">
-                                <span v-if="item.price">
-                                    {{ item.price }}
-                                </span>
-                                <div
-                                    v-else
-                                    class="d-flex"
-                                >
-                                    <v-text-field
-                                        v-model="item.price"
-                                        label="Price"
-                                        variant="outlined"
-                                        density="dense"
-                                    ></v-text-field>
-                                    <v-btn
-                                        size="small"
-                                        color="primary"
-                                        class="ml-2"
-                                    >Set</v-btn>
-                                </div>
                             </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-btn
                                     variant="tonal"
                                     size="small"
-                                    :to="`/admin/items/${item.id}`"
                                 >
                                     Open
                                 </v-btn>
@@ -100,11 +61,7 @@ import { ref, computed, inject, onMounted } from 'vue';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useStore } from 'vuex';
 import moment from 'moment';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend } from 'chart.js';
-import { Line, Pie } from 'vue-chartjs';
 
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend);
 
 const user = computed(() => store.state.user);
 const { notify } = useNotification();
@@ -117,16 +74,15 @@ const store = useStore();
 const items = ref([]);
 const search = ref('');
 const headers = [
-    { title: 'Image', key: 'image' },
+    { title: 'Email', key: 'email' },
     { title: 'Status', key: 'status' },
-    { title: 'Tracking No.', key: 'tracking' },
-    { title: 'Price', key: 'price' },
+    { title: 'Address', key: 'address' },
     { title: 'Actions', key: 'actions' }
 ];
 
 onMounted(async () => {
     try {
-        const { data } = await api.admin.items.index();
+        const { data } = await api.admin.users.index();
         items.value = data;
     } catch (error) {
         requestFailed.value = true;
@@ -136,7 +92,6 @@ onMounted(async () => {
 });
 
 const onChangeStatus = async (item) => {
-    const { data } = await api.admin.items.setStatus(item.id, item.status);
-    items.value = data;
+    await api.admin.users.setStatus(item.id, item.status);
 };
 </script>

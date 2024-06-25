@@ -152,8 +152,8 @@ const menu = ref(false);
 
 const menuItems = [
     { href: '/admin/items', text: 'Items' },
-    { href: '/admin/users', text: 'Users' },
     { href: '/admin/pr-boxes', text: 'PR Boxes' },
+    { href: '/admin/users', text: 'Users' },
     { href: '/account', text: 'Account' },
 ];
 

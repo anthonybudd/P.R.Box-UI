@@ -23,10 +23,20 @@
                         <h1
                             v-if="!xs"
                             class="ml-4"
-                        >P.R. Box</h1>
+                        >
+                            P.R. Box
+                        </h1>
                     </div>
 
                     <v-spacer></v-spacer>
+
+                    <v-chip
+                        v-if="user.type === 'Admin'"
+                        label
+                        size="small"
+                        color="red"
+                        class="mr-2"
+                    >{{ user.type }}</v-chip>
 
                     <v-menu
                         v-model="menu"

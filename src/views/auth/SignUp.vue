@@ -8,7 +8,8 @@
             justify="center"
         >
             <v-col
-                cols="3"
+                md="3"
+                xs="12"
                 class="text-center"
             >
                 <v-sheet
@@ -32,7 +33,7 @@
                                     label="Email"
                                     required
                                     density="compact"
-                                    @keydown.enter.prevent="onClickLogin"
+                                    :error-messages="(errors.email) ? errors.email.msg : []"
                                 ></v-text-field>
                                 <v-text-field
                                     v-model="password"
@@ -42,19 +43,68 @@
                                     label="Password"
                                     required
                                     density="compact"
-                                    @keydown.enter.prevent="onClickLogin"
-                                    :error-messages="isError
-                                        ? ['Incorrect email or password']
-                                        : []
-                                        "
+                                    :error-messages="(errors.password) ? errors.password.msg : []"
                                 ></v-text-field>
-                                <v-btn
-                                    block
-                                    :disabled="isLoading"
-                                    :loading="isLoading"
-                                    color="primary"
-                                    @click="onClickLogin"
-                                >Login</v-btn>
+                                <div class="d-flex">
+                                    <v-text-field
+                                        v-model="firstName"
+                                        :disabled="isLoading"
+                                        variant="outlined"
+                                        label="First Name"
+                                        class="pr-2"
+                                        required
+                                        density="compact"
+                                        :error-messages="(errors.firstName) ? errors.firstName.msg : []"
+                                    ></v-text-field>
+                                    <v-text-field
+                                        v-model="lastName"
+                                        :disabled="isLoading"
+                                        variant="outlined"
+                                        label="Last Name"
+                                        required
+                                        density="compact"
+                                        :error-messages="(errors.lastName) ? errors.lastName.msg : []"
+                                    ></v-text-field>
+                                </div>
+
+                                <v-checkbox
+                                    required
+                                    v-model="tos"
+                                    value="2024-06-25"
+                                    class="my-0"
+                                    validate-on-blur
+                                    :error-messages="(errors.tos) ? errors.tos.msg : []"
+                                >
+                                    <template v-slot:label>
+                                        I agree to the P.R Box Terms of Service
+                                    </template>
+                                </v-checkbox>
+
+                                <vue-hcaptcha
+                                    :key="key"
+                                    @verify="onVerifyHcaptcha"
+                                    @expired="onExpiredHcaptcha"
+                                    @error="onErrorHcaptcha"
+                                    sitekey="e1ed0f90-f986-4e72-8ed1-5a3921741214"
+                                ></vue-hcaptcha>
+
+                                <div class="d-flex">
+                                    <v-btn
+                                        block
+                                        :disabled="isLoading"
+                                        color="primary"
+                                        variant="text"
+                                        @click="onClickLogin"
+                                    >Login</v-btn>
+
+                                    <v-btn
+                                        block
+                                        :disabled="isLoading || htoken === ''"
+                                        :loading="isLoading"
+                                        color="primary"
+                                        @click="onClickSignUp"
+                                    >Sign-up</v-btn>
+                                </div>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -65,39 +115,60 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import VueHcaptcha from '@hcaptcha/vue3-hcaptcha';
+import { ref, inject } from "vue";
 import api from "./../../api";
+import { onLogin } from './../../plugins';
 import router from "@/plugins/router";
 import { useStore } from "vuex";
 
 const store = useStore();
-
+const errorHandler = inject('errorHandler');
 const isLoading = ref(false);
-const isError = ref(false);
+const errors = ref({});
+const key = ref(1);
+
 const email = ref("");
 const password = ref("");
+const firstName = ref("");
+const lastName = ref("");
+const tos = ref("");
+const htoken = ref("");
 
-const onClickLogin = async () => {
+const onClickLogin = () => router.push("/login");
+
+const onVerifyHcaptcha = async (token) => {
+    htoken.value = token;
+};
+const onExpiredHcaptcha = async () => {
+    htoken.value = '';
+};
+const onErrorHcaptcha = async () => {
+    htoken.value = '';
+};
+
+const onClickSignUp = async () => {
     try {
         isLoading.value = true;
         const { data } = await api.auth.signUp({
             email: email.value,
             password: password.value,
-            firstName: 'HARDCODED',
-            tos: 'HARDCODED',
+            firstName: firstName.value,
+            lastName: lastName.value,
+            tos: tos.value,
         });
 
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
-
-        const { data: user } = await api.user.get();
-        store.commit("setUser", user);
-
-        router.push("/");
+        await onLogin(api, store, router);
     } catch (error) {
+        errorHandler(error, (data, code) => {
+            if (code === 422) errors.value = data;
+            key.value++;
+        });
+    } finally {
         isLoading.value = false;
-        isError.value = true;
-        console.error(error);
+
     }
 };
 </script>

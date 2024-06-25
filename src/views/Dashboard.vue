@@ -39,7 +39,6 @@
                 xs="12"
             >
                 <v-card class="fill-height">
-                    <v-card-item title="Items"></v-card-item>
                     <v-card-text>
                         <v-data-table
                             :search="search"
@@ -57,9 +56,11 @@
                                     ></v-img>
                                 </div>
                             </template>
-                            <template v-slot:item.tracking="{ item }">
+                            <template v-slot:item.shipping="{ item }">
                                 <span v-if="item.tracking">
-                                    {{ item.tracking }}
+                                    Tracking: {{ item.tracking }} <br />
+                                    Carrier: {{ item.carrier }} <br />
+                                    Price: {{ $currency(item.price) }} <br />
                                 </span>
                                 <span
                                     v-else
@@ -76,10 +77,6 @@
                                     {{ item.status }}
                                 </v-chip>
                             </template>
-                            <template v-slot:item.price="{ item }">
-                                {{ $currency(item.price) }}
-                            </template>
-
                             <template v-slot:item.actions="{ item }">
                                 <v-btn
                                     variant="tonal"
@@ -103,13 +100,7 @@ import DashboardStats from '@/components/DashboardStats.vue';
 import { ref, computed, inject, onMounted } from 'vue';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useStore } from 'vuex';
-import moment from 'moment';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend } from 'chart.js';
-import { Line, Pie } from 'vue-chartjs';
 import { useRouter } from 'vue-router';
-
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend);
 
 const user = computed(() => store.state.user);
 const { notify } = useNotification();
@@ -119,20 +110,18 @@ const api = inject('api');
 const store = useStore();
 const router = useRouter();
 
-
 const items = ref([]);
 const search = ref('');
 const headers = [
     { title: 'Image', key: 'image' },
     { title: 'Status', key: 'status' },
-    { title: 'Tracking No.', key: 'tracking' },
-    { title: 'Price', key: 'price' },
+    { title: 'Shipping Info.', key: 'shipping' },
     { title: 'Actions', key: 'actions' }
 ];
 
 onMounted(async () => {
     try {
-        if (user.type === 'Admin') router.push('/admin');
+        if (user.value.type === 'Admin') router.push('/admin/items');
         const { data } = await api.items.index();
         items.value = data;
     } catch (error) {

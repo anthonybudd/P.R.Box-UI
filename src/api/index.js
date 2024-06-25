@@ -5,6 +5,8 @@ import PRBoxes from './PRBoxes';
 import Items from './Items';
 
 import AdminItems from './admin/Items';
+import AdminUsers from './admin/Users';
+import AdminPRBoxes from './admin/PRBoxes';
 
 
 class API {
@@ -22,6 +24,8 @@ class API {
 
         this.admin = {};
         this.admin.items = new AdminItems(JWT);
+        this.admin.users = new AdminUsers(JWT);
+        this.admin.prBoxes = new AdminPRBoxes(JWT);
     }
 
     getJWT() {

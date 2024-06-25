@@ -108,7 +108,8 @@
                         type="text"
                         class="mb-4"
                         :rules="[rules.required]"
-                        required
+                        readonly
+                        disabled=""
                     ></v-text-field>
                 </v-col>
                 <v-col

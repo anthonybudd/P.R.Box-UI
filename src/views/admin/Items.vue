@@ -27,7 +27,7 @@
                                     ></v-img>
                                 </div>
                             </template>
-                            <template v-slot:item.tracking="{ item }">
+                            <!-- <template v-slot:item.tracking="{ item }">
                                 <span v-if="item.tracking">
                                     {{ item.tracking }}
                                 </span>
@@ -87,7 +87,7 @@
                                 >
                                     Open
                                 </v-btn>
-                            </template>
+                            </template> -->
                         </v-data-table>
                     </v-card-text>
                 </v-card>
