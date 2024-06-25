@@ -91,16 +91,11 @@ const onClickLogin = async () => {
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
         await onLogin(api, store, router);
-
-        if (route.query.redirect) {
-            router.push(atob(route.query.redirect));
-        } else {
-            router.push("/");
-        }
     } catch (error) {
         isLoading.value = false;
         isError.value = true;
         console.error(error);
+        router.push("/login");
     }
 };
 </script>

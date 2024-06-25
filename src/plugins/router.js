@@ -119,6 +119,7 @@ export default createRouter({
                     beforeEnter: async (to, from, next) => {
                         console.warn('/logout');
                         localStorage.removeItem('AccessToken');
+                        console.log('logout', localStorage.getItem("AccessToken"));
                         if (to.query.redirect) {
                             next(`/login?redirect=${to.query.redirect}`);
                         } else {

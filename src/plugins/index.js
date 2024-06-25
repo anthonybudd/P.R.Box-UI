@@ -6,6 +6,7 @@ import vuetify from './vuetify';
 import router from './router';
 import moment from 'moment';
 import store from './store';
+import './../styles/custom.scss';
 
 export function registerPlugins(app) {
     loadFonts();
@@ -26,6 +27,15 @@ export function registerPlugins(app) {
                 app.config.globalProperties.$formatDate = (timestamp, format = 'lll') => {
                     if (timestamp === undefined || timestamp === null) return '';
                     return moment(timestamp).format(format);
+                };
+
+                app.config.globalProperties.$currency = (value) => {
+                    if (value === undefined || value === null) return '';
+                    const formatter = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                    });
+                    return formatter.format(value);
                 };
             },
         });

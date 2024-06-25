@@ -49,17 +49,6 @@
                                     {{ item.weight }}g
                                 </div>
                             </v-card-title>
-
-                            <v-card-title
-                                v-if="item.image"
-                                class="text-overline"
-                            >
-                                Image:
-                            </v-card-title>
-                            <v-img
-                                v-if="item.image"
-                                :src="item.image"
-                            ></v-img>
                         </v-col>
                     </v-row>
                 </v-sheet>
@@ -76,58 +65,43 @@
                         side="end"
                     >
                         <v-timeline-item
-                            dot-color="pink"
+                            dot-color="orange"
                             size="small"
+                            v-if="item.receivedAt"
                         >
-                            <div class="d-flex">
-                                <strong class="me-4">5pm</strong>
+                            <div>
+                                <strong class="me-4">{{ $formatDate(item.receivedAt, 'lll') }}</strong>
                                 <div>
-                                    <strong>New Icon</strong>
-                                    <div class="text-caption">
-                                        Mobile App
-                                    </div>
+                                    <h2>Item Received</h2>
+                                    <v-img
+                                        v-if="item.image"
+                                        :src="item.image"
+                                    ></v-img>
                                 </div>
                             </div>
                         </v-timeline-item>
-
                         <v-timeline-item
-                            dot-color="teal-lighten-3"
+                            dot-color="blue"
                             size="small"
+                            v-if="item.shippedAt"
                         >
-                            <div class="d-flex">
-                                <strong class="me-4">3-4pm</strong>
+                            <div>
+                                <strong class="me-4">{{ $formatDate(item.shippedAt, 'lll') }}</strong>
                                 <div>
-                                    <strong>Design Stand Up</strong>
-                                    <div class="text-caption mb-2">
-                                        Hangouts
-                                    </div>
+                                    <h2>Item Shipped</h2>
+                                    <p>Tracking: {{ item.tracking }}</p>
                                 </div>
                             </div>
                         </v-timeline-item>
-
                         <v-timeline-item
-                            dot-color="pink"
+                            dot-color="green"
                             size="small"
+                            v-if="item.deliveredAt"
                         >
-                            <div class="d-flex">
-                                <strong class="me-4">12pm</strong>
+                            <div>
+                                <strong class="me-4">{{ $formatDate(item.deliveredAt, 'lll') }}</strong>
                                 <div>
-                                    <strong>Lunch break</strong>
-                                </div>
-                            </div>
-                        </v-timeline-item>
-
-                        <v-timeline-item
-                            dot-color="teal-lighten-3"
-                            size="small"
-                        >
-                            <div class="d-flex">
-                                <strong class="me-4">9-11am</strong>
-                                <div>
-                                    <strong>Finish Home Screen</strong>
-                                    <div class="text-caption">
-                                        Web App
-                                    </div>
+                                    <h2>Delivered</h2>
                                 </div>
                             </div>
                         </v-timeline-item>
@@ -142,8 +116,6 @@
 <script setup>
 import { ref, inject, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import BookUpdateForm from './../components/BookUpdateForm.vue';
-import BookDeleteConfirmation from './../components/BookDeleteConfirmation.vue';
 
 const api = inject('api');
 const route = useRoute();
@@ -163,8 +135,4 @@ const getData = async () => {
     item.value = data;
 };
 
-const onClose = () => {
-    editDialoge.value = false;
-    getData();
-};  
 </script>

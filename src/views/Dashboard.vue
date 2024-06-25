@@ -61,6 +61,12 @@
                                 <span v-if="item.tracking">
                                     {{ item.tracking }}
                                 </span>
+                                <span
+                                    v-else
+                                    class="text-medium-emphasis"
+                                >
+                                    Not shipped yet
+                                </span>
                             </template>
                             <template v-slot:item.status="{ item }">
                                 <v-chip
@@ -71,7 +77,7 @@
                                 </v-chip>
                             </template>
                             <template v-slot:item.price="{ item }">
-                                {{ item.price }}
+                                {{ $currency(item.price) }}
                             </template>
 
                             <template v-slot:item.actions="{ item }">
@@ -126,7 +132,7 @@ const headers = [
 
 onMounted(async () => {
     try {
-        // if (user.type === 'Admin') router.push('/admin');
+        if (user.type === 'Admin') router.push('/admin');
         const { data } = await api.items.index();
         items.value = data;
     } catch (error) {
