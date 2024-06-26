@@ -14,7 +14,6 @@
                 <v-col
                     md="6"
                     cols="12"
-                    v-if="prBox !== false"
                 >
                     <h3>Your PR Box Address</h3>
                     <p class="mb-2 text-medium-emphasis">Ship items to this address.</p>
@@ -22,13 +21,19 @@
                         variant="tonal"
                         color="surface-variant"
                     >
-                        <v-card-text>
+                        <v-card-text v-if="prBox !== false">
                             <p class="text-h5">
                                 <b>{{ prBox.name }}</b><br />
                                 {{ prBox.addressLine1 }}<br />
                                 {{ prBox.addressLine2 }}<br />
                                 {{ prBox.city }},<br />
                                 {{ prBox.state }}, {{ prBox.zipcode }}<br />
+                            </p>
+                        </v-card-text>
+
+                        <v-card-text v-else>
+                            <p class="text-h5">
+                                PR Box not assigned yet
                             </p>
                         </v-card-text>
                     </v-card>
@@ -157,7 +162,7 @@ onMounted(async () => {
         const { data } = await api.prBox.get();
         prBox.value = data;
     } catch (error) {
-        errorHandler(error);
+
     } finally {
         isLoading.value = false;
     }

@@ -1,6 +1,6 @@
 import Service from './Service';
 
-class AdminItem extends Service {
+class Item extends Service {
     index() {
         return this.axios.get(`/items`);
     }
@@ -10,4 +10,4 @@ class AdminItem extends Service {
     }
 }
 
-export default AdminItem;
+export default Item;

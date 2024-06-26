@@ -24,6 +24,14 @@ class User extends Service {
     getCharges() {
         return this.axios.get('/user/charges');
     }
+
+    getSetupIntent() {
+        return this.axios.get('/user/stripe/setup-intent');
+    }
+
+    getLast4() {
+        return this.axios.get('/user/stripe/last-4');
+    }
 }
 
 export default User;

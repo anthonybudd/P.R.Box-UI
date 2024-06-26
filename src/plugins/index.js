@@ -69,8 +69,7 @@ export async function onLogin(api, store, router) {
         useZerothGroup();
     }
 
-    if (user.type === 'Admin') router.push('/admin');
+    console.log(user.status);
     if (user.status === 'Blocked') return router.push('/blocked');
     if (user.status === 'Pending') return router.push('/on-boarding');
-    return router.push("/");
 }

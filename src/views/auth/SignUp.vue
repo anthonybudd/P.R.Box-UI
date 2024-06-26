@@ -163,6 +163,7 @@ const onClickSignUp = async () => {
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
         await onLogin(api, store, router);
+        router.push('/on-boarding');
     } catch (error) {
         errorHandler(error, (data, code) => {
             if (code === 422) errors.value = data;

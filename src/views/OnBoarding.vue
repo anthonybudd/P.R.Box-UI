@@ -160,6 +160,44 @@
                 >
                     <v-col
                         md="3"
+                        xs="11"
+                        class="text-center"
+                    >
+                        <v-card
+                            class="w-100"
+                            elevation="0"
+                        >
+                            <v-card-text>
+                                <h2>Billing</h2>
+                                <p class="text-subtitle-1 mb-2">
+                                    You will automatically be charged for each package we recieve
+                                </p>
+
+                                <form id="payment-form">
+                                    <div id="payment-element">
+                                        <!-- Elements will create form elements here -->
+                                    </div>
+                                    <div id="error-message">
+                                        <!-- Display error message to your customers here -->
+                                    </div>
+                                </form>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-window-item>
+
+            <v-window-item
+                class="fill-height"
+                align-self="center"
+            >
+                <v-row
+                    class="fill-height"
+                    align="center"
+                    justify="center"
+                >
+                    <v-col
+                        md="3"
                         xs="12"
                         class="text-center"
                     >
@@ -240,7 +278,7 @@
 
 <script setup>
 import { useNotification } from '@kyvg/vue3-notification';
-import { ref, inject, onMounted, computed } from 'vue';
+import { ref, inject, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -253,12 +291,16 @@ const router = useRouter();
 const store = useStore();
 
 const isLoading = ref(true);
-let onboarding = ref(0);
+const onboarding = ref(0);
+
+const isLoadingVerificationCode = ref(false);
+const verificationCode = ref('');
 
 const stages = ref([
-    'Email',
-    'ID',
-    'Review',
+    'Email',   // 0
+    'ID',      // 1
+    'Billing', // 2
+    'Review',  // 3
 ]);
 
 const user = computed(() => store.state.user);
@@ -269,9 +311,15 @@ const isValid = computed(() => {
             return (/^\d{6}$/gm.test(verificationCode.value));
         case 1:
             return isValidAddress.value;
+        case 2:
+            return true;
         default:
             return false;
     }
+});
+
+watch(onboarding, (value) => {
+    if (value === 2) initStripe();
 });
 
 onMounted(async () => {
@@ -281,8 +329,10 @@ onMounted(async () => {
         onboarding.value = 0;
     } else if (!user.addressLine1) {
         onboarding.value = 1;
-    } else {
+    } else if (!user.stripeLast4) {
         onboarding.value = 2;
+    } else {
+        onboarding.value = 3;
     }
     isLoading.value = false;
 });
@@ -293,6 +343,8 @@ const next = () => {
             onboarding.value = onboarding.value + 1;
         case 1:
             submitAddressForm();
+        case 2:
+            submitStripeForm();
         default:
             return false;
     }
@@ -303,9 +355,6 @@ const onClickLogout = () => router.push('/logout');
 
 ////////////////////////////////////////////
 // 1 - Email
-const isLoadingVerificationCode = ref(false);
-const verificationCode = ref('');
-
 const resendVerificationCode = async () => {
     isLoadingVerificationCode.value = true;
     await api.user.resendVerificationEmail();
@@ -357,7 +406,36 @@ const submitAddressForm = async () => {
 };
 
 ////////////////////////////////////////////
-// 3 - Review
+// 3 - Billing
+let stripe = Stripe(import.meta.env.VITE_STRIPE_PK);
+let elements;
+let paymentElement;
+
+const initStripe = async () => {
+    const { data: cs } = await api.user.getSetupIntent();
+    elements = stripe.elements({ clientSecret: cs.clientSecret });
+    paymentElement = elements.create('payment');
+    paymentElement.mount('#payment-element');
+};
+
+const submitStripeForm = async () => {
+    const { error } = await stripe.confirmSetup({
+        elements,
+        redirect: 'if_required'
+    });
+
+    if (error) {
+        console.error(error);
+        const messageContainer = document.querySelector('#error-message');
+        messageContainer.textContent = error.message;
+    } else {
+        onboarding.value = 3;
+        await api.user.getLast4();
+    }
+};
+
+////////////////////////////////////////////
+// 4 - Review
 const isLoadingCheckAccountStatus = ref(false);
 
 const checkAccountStatus = async () => {

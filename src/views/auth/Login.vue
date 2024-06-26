@@ -102,6 +102,10 @@ const onClickLogin = async () => {
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
         await onLogin(api, store, router);
+
+        if (store.state.user.type === 'Admin') {
+            router.push('/admin');
+        }
     } catch (error) {
         isLoading.value = false;
         isError.value = true;

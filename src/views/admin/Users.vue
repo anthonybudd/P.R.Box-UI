@@ -18,6 +18,7 @@
                             <template v-slot:item.email="{ item }">
                                 <p><b>{{ item.firstName }} {{ item.lastName }}</b></p>
                                 <p>{{ item.email }}</p>
+                                <p><small>{{ item.type }}</small></p>
                             </template>
                             <template v-slot:item.address="{ item }">
                                 <p>

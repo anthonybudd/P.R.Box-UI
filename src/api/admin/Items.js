@@ -1,6 +1,6 @@
 import Service from './../Service';
 
-class Items extends Service {
+class AdminItems extends Service {
     index() {
         return this.axios.get(`/admin/items`);
     }
@@ -9,9 +9,13 @@ class Items extends Service {
         return this.axios.get(`/admin/items/${itemID}`);
     }
 
-    setStatus(itemID, status) {
-        return this.axios.post(`/admin/items/${itemID}/set-status`, { status });
+    create(fd) {
+        return this.axios.post(`/admin/items`, fd);
+    }
+
+    ship(itemID, fd) {
+        return this.axios.post(`/admin/items/${itemID}/ship`, fd);
     }
 }
 
-export default Items;
+export default AdminItems;
