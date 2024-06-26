@@ -22,6 +22,9 @@
                         <template v-slot:item.createdAt="{ item }">
                             {{ $formatDate(item.createdAt) }}
                         </template>
+                        <template v-slot:item.amount="{ item }">
+                            {{ $currency(item.amount) }}
+                        </template>
                     </v-data-table>
                 </v-sheet>
             </v-col>

@@ -96,22 +96,22 @@ export default createRouter({
                 {
                     path: '/login',
                     name: 'Login',
-                    component: () => import('@/views/Auth/Login.vue'),
+                    component: () => import('@/views/auth/Login.vue'),
                 },
                 {
                     path: '/sign-up',
                     name: 'SignUp',
-                    component: () => import('@/views/Auth/SignUp.vue'),
+                    component: () => import('@/views/auth/SignUp.vue'),
                 },
                 {
                     path: '/forgot-password',
                     name: 'ForgotPassword',
-                    component: () => import('@/views/Auth/Login.vue'),
+                    component: () => import('@/views/auth/Login.vue'),
                 },
                 {
                     path: '/reset-password',
                     name: 'ResetPassword',
-                    component: () => import('@/views/Auth/Login.vue'),
+                    component: () => import('@/views/auth/Login.vue'),
                 },
                 {
                     path: '/logout',

@@ -51,6 +51,7 @@ const items = ref([]);
 const search = ref('');
 const headers = [
     { title: 'ID', key: 'id' },
+    { title: 'Name', key: 'name' },
     { title: 'Address', key: 'address' },
 ];
 
