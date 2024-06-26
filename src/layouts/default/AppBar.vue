@@ -35,6 +35,7 @@
                         label
                         size="small"
                         color="red"
+                        variant="flat"
                         class="mr-2"
                     >{{ user.type }}</v-chip>
 

@@ -19,7 +19,7 @@ class API {
         this.auth = new Auth(JWT);
         this.user = new User(JWT);
         this.group = new Group(JWT);
-        this.books = new PRBoxes(JWT);
+        this.prBox = new PRBoxes(JWT);
         this.items = new Items(JWT);
 
         this.admin = {};

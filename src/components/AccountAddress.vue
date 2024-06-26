@@ -14,6 +14,7 @@
                 <v-col
                     md="6"
                     cols="12"
+                    v-if="prBox !== false"
                 >
                     <h3>Your PR Box Address</h3>
                     <p class="mb-2 text-medium-emphasis">Ship items to this address.</p>
@@ -23,11 +24,11 @@
                     >
                         <v-card-text>
                             <p class="text-h5">
-                                <b>P.R. Box 12345</b><br />
-                                123 Main St<br />
-                                Unit B-502<br />
-                                Austin,<br />
-                                TX 78741<br />
+                                <b>{{ prBox.name }}</b><br />
+                                {{ prBox.addressLine1 }}<br />
+                                {{ prBox.addressLine2 }}<br />
+                                {{ prBox.city }},<br />
+                                {{ prBox.state }}, {{ prBox.zipcode }}<br />
                             </p>
                         </v-card-text>
                     </v-card>
@@ -135,7 +136,7 @@
 
 <script setup>
 import { useNotification } from '@kyvg/vue3-notification';
-import { ref, inject, computed } from 'vue';
+import { ref, inject, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 const errorHandler = inject('errorHandler');
@@ -148,6 +149,19 @@ const user = computed(() => store.state.user);
 const errors = ref({});
 const isValid = ref(false);
 const isLoading = ref(false);
+const prBox = ref(false);
+
+onMounted(async () => {
+    try {
+        isLoading.value = true;
+        const { data } = await api.prBox.get();
+        prBox.value = data;
+    } catch (error) {
+        errorHandler(error);
+    } finally {
+        isLoading.value = false;
+    }
+});
 
 const submitForm = async () => {
     try {

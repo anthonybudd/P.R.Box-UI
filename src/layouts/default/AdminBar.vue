@@ -28,6 +28,15 @@
 
                     <v-spacer></v-spacer>
 
+                    <v-chip
+                        v-if="user.type === 'Admin'"
+                        label
+                        size="small"
+                        color="red"
+                        variant="flat"
+                        class="mr-2"
+                    >{{ user.type }}</v-chip>
+
                     <v-menu
                         v-model="menu"
                         :close-on-content-click="false"

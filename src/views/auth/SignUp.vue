@@ -85,7 +85,7 @@
                                     @verify="onVerifyHcaptcha"
                                     @expired="onExpiredHcaptcha"
                                     @error="onErrorHcaptcha"
-                                    sitekey="e1ed0f90-f986-4e72-8ed1-5a3921741214"
+                                    :sitekey="hCaptchaSiteKey"
                                 ></vue-hcaptcha>
 
                                 <div class="d-flex">
@@ -122,6 +122,7 @@ import { onLogin } from './../../plugins';
 import router from "@/plugins/router";
 import { useStore } from "vuex";
 
+const hCaptchaSiteKey = import.meta.env.VITE_H_CAPTCHA_SITE_KEY;
 const store = useStore();
 const errorHandler = inject('errorHandler');
 const isLoading = ref(false);
@@ -156,6 +157,7 @@ const onClickSignUp = async () => {
             firstName: firstName.value,
             lastName: lastName.value,
             tos: tos.value,
+            htoken: htoken.value,
         });
 
         localStorage.setItem("AccessToken", data.accessToken);

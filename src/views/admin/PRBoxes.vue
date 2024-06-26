@@ -15,6 +15,9 @@
                             :items="items"
                             :loading="isLoading"
                         >
+                            <template v-slot:item.id="{ item }">
+                                <small>{{ item.id }}</small>
+                            </template>
                             <template v-slot:item.address="{ item }">
                                 <p>
                                     <small>
