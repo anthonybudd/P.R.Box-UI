@@ -158,10 +158,14 @@
                                                 <v-text-field
                                                     v-model="item.weight"
                                                     label="Weight"
-                                                    placeholder="1000g"
+                                                    placeholder="500"
                                                     variant="outlined"
                                                     density="compact"
-                                                ></v-text-field>
+                                                >
+                                                    <template v-slot:append-inner>
+                                                        Grams
+                                                    </template>
+                                                </v-text-field>
                                                 <v-text-field
                                                     v-model="item.carrier"
                                                     label="Carrier"
@@ -231,15 +235,16 @@
 
 
 <script setup>
-import { ref, inject, onMounted, getCurrentInstance } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 
-const instance = getCurrentInstance();
 const isLoading = ref(false);
 const errorHandler = inject('errorHandler');
 const api = inject('api');
 
 const isLoadingCreateNewItem = ref(false);
 const PRBoxID = ref('');
+const imagePreview = ref(null);
+const imagePreviewShip = ref(null);
 
 const items = ref([]);
 const prBoxes = ref([]);
@@ -274,7 +279,7 @@ const onImageCapture = async (files) => {
     const image = files[0];
     newItem.value.image = image;
     const reader = new FileReader();
-    reader.onload = (e) => (instance.ctx.$refs.imagePreview.src = e.target.result);
+    reader.onload = (e) => (imagePreview.value.src = e.target.result);
     reader.readAsDataURL(image);
 };
 
@@ -301,7 +306,7 @@ const onImageCaptureShip = async (item, files) => {
     const image = files[0];
     item.imageShipped = image;
     const reader = new FileReader();
-    reader.onload = (e) => (instance.ctx.$refs.imagePreviewShip.src = e.target.result);
+    reader.onload = (e) => (imagePreviewShip.value.src = e.target.result);
     reader.readAsDataURL(image);
 };
 
