@@ -101,10 +101,14 @@ const onClickLogin = async () => {
 
         localStorage.setItem("AccessToken", data.accessToken);
         api.setJWT(data.accessToken);
-        await onLogin(api, store, router);
+        const didRedirect = await onLogin(api, store, router);
 
-        if (store.state.user.type === 'Admin') {
-            router.push('/admin');
+        if (!didRedirect) {
+            if (store.state.user.type === 'Admin') {
+                router.push('/admin');
+            } else {
+                router.push('/');
+            }
         }
     } catch (error) {
         isLoading.value = false;

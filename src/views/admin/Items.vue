@@ -231,25 +231,12 @@
 
 
 <script setup>
-import DashboardStats from '@/components/DashboardStats.vue';
-import { ref, computed, inject, onMounted, getCurrentInstance } from 'vue';
-import { useNotification } from '@kyvg/vue3-notification';
-import { useStore } from 'vuex';
-import moment from 'moment';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend } from 'chart.js';
-import { Line, Pie } from 'vue-chartjs';
+import { ref, inject, onMounted, getCurrentInstance } from 'vue';
 
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, ArcElement, Legend);
-
-const user = computed(() => store.state.user);
 const instance = getCurrentInstance();
-const { notify } = useNotification();
-const verifyEmailSent = ref(false);
 const isLoading = ref(false);
 const errorHandler = inject('errorHandler');
 const api = inject('api');
-const store = useStore();
 
 const isLoadingCreateNewItem = ref(false);
 const PRBoxID = ref('');
@@ -308,11 +295,8 @@ const onClickCreateItem = async (isActive) => {
 };
 
 
-
-
 /////////////////////////////
 // Shipping
-
 const onImageCaptureShip = async (item, files) => {
     const image = files[0];
     item.imageShipped = image;
