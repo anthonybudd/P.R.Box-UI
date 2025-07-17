@@ -1,18 +1,26 @@
-# Vuetify 3 SaaS Boilerplate
+<img height="75" src="https://raw.githubusercontent.com/anthonybudd/P.R.Box-UI/master/src/assets/logo.png"/>
+
+
+# P.R. Box UI
+
+This is the fontend for P.R. Box.
+
 <p align="center">
-    <img src="https://raw.githubusercontent.com/anthonybudd/Vuetify3-SaaS-Boilerplate/main/public/img/screenshots.png?v=1">
+  <a href="https://www.youtube.com/watch?v=3rvBe_5Y78o">
+  <img width="350" src="https://raw.githubusercontent.com/anthonybudd/anthonybudd/master/img/6hr-startup-yt.png" alt="YouTube">
+  </a>
 </p>
 
-A minimal SaaS boilerplate built using Vuetify 3. This project was built to work out of the box with [AnthonyBudd/Express-TS-Api-Boilerplate](https://github.com/anthonybudd/express-ts-api-boilerplate) as the backend.
+<h6 align="center">
 
-- 🔐 Login, Sign-up, ForgotPassword
-- 📈 Dashboard
-- 👥 Manage Account/Group
-- 💾 CRUD Model Example
+ [Coding a Live Start-up in 6hrs](https://youtu.be/3rvBe_5Y78o?si=b9UPv7suMAUyv5FP)  | [Frontend](https://github.com/anthonybudd/P.R.Box-UI)  | [Backend](https://github.com/anthonybudd/P.R.Box-API)
+
+</h6>
+
 
 ```sh
-git clone git@github.com:anthonybudd/Vuetify3-SaaS-Boilerplate.git
-cd Vuetify3-SaaS-Boilerplate
+git clone git@github.com:anthonybudd/P.R.Box-UI.git
+cd P.R.Box-UI
 cp .env.example .env
 npm i
 npm run dev
